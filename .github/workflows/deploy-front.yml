@@ -1,4 +1,4 @@
-name: Build and Deploy Front to S3 and Invalidate CloudFront
+name: Build and Deploy Front to S3 and CloudFront
 
 on:
   push:
