@@ -29,10 +29,10 @@ jobs:
           go build -o main ./src
 
       - name: 📥 Install Fly CLI
-        run: curl -L https://fly.io/install.sh | sh && export FLYCTL_INSTALL="/home/runner/.fly" && export PATH="$FLYCTL_INSTALL/bin:$PATH"
+        run: curl -L https://fly.io/install.sh | sh
 
       - name: 🚀 Deploy to Fly.io
         run: |
           cd api/
-          flyctl auth token "${{ secrets.FLY_API_TOKEN }}"
-          flyctl deploy --remote-only
+          /home/runner/.fly/bin/flyctl auth token "${{ secrets.FLY_API_TOKEN }}"
+          /home/runner/.fly/bin/flyctl deploy --remote-only
