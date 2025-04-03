@@ -1,13 +1,13 @@
 
 import { useAuthStore } from "@/stores/auth";
 
-export async function handlerRequest(method, url, body = null) {
+export async function handlerRequest(method, url, body = null, includeAuth = true) {
     const authStore = useAuthStore();
     try {
-        const response = await fetch(`http://localhost:3000/${url}`, {
+        const response = await fetch(`https://api-broken-thunder-9310.fly.dev/api/${url}`, {
             method,
             headers: {
-                "Authorization": `Bearer ${authStore.user.token}`,
+                ...(includeAuth ? { "Authorization": `Bearer ${authStore.user.token}` } : {}),
                 "Content-Type": "application/json",
             },
             body: body ? JSON.stringify(body) : null,
