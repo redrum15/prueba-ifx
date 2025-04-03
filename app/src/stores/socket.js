@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { WS_URL } from "@/config";
 
 export const useWebSocketStore = defineStore("websocket", () => {
 
@@ -9,8 +10,7 @@ export const useWebSocketStore = defineStore("websocket", () => {
     const connect = () => {
         if (socket.value) return;
 
-        socket.value = new WebSocket("ws://localhost:3000/ws");
-
+        socket.value = new WebSocket(`${WS_URL}/ws`);
         socket.value.onmessage = (event) => {
             const data = JSON.parse(event.data);
             messages.value.push(data);
