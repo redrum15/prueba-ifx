@@ -28,6 +28,7 @@ func (req *LoginBody) Validate() error {
 }
 
 type LoginResponse struct {
-	Token  string `json:"token"`
-	UserID string `json:"user_id"`
+	Token    string `json:"token"`
+	UserID   string `json:"user_id"`
+	UserType string `json:"user_type"`
 }
