@@ -5,6 +5,7 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 COPY . .
+ENV VITE_ENVIRONMENT=local
 RUN npm run build
 
 FROM nginx:alpine
