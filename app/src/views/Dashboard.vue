@@ -5,15 +5,15 @@ import { useRouter } from 'vue-router';
 import { onMounted, ref, computed } from 'vue';
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { API_URLS } from "@/rest/urls";
+import { Modal } from "bootstrap";
 import Navbar from '@/components/Navbar.vue';
 
 const router = useRouter();
-
 const toastRef = ref(null);
 const toastMessage = ref("test");
 const showToastFlag = ref(false);
 const authStore = useAuthStore();
-
+const modalRef = ref(null);
 
 const items = ref([]);
 const formData = ref({
@@ -31,20 +31,19 @@ const formattedItems = computed(() =>
     }))
 );
 
-
 const handleVMCreate = async () => {
     try {
         await handlerRequest("POST", API_URLS.VMS.DEFAULT, formData.value);
-        toastMessage.value = "VM created successfully";
+        const modalInstance = Modal.getInstance(modalRef.value) || new Modal(modalRef.value);
+        modalInstance.hide();
+
+        formData.value = { name: "", cores: "", ram: "", os: "", status: "" };
+
     } catch (error) {
         toastMessage.value = error.message;
-    } finally {
         showToastFlag.value = true;
-        showToast();
     }
 };
-
-
 
 onMounted(async () => {
     try {
@@ -52,10 +51,8 @@ onMounted(async () => {
     } catch (error) {
         toastMessage.value = error.message;
         showToastFlag.value = true;
-        showToast();
     }
 });
-
 
 const goToDetail = (id) => {
     router.push(`/vm/${id}`);
@@ -64,7 +61,7 @@ const goToDetail = (id) => {
 
 <template>
     <div class="toast-container position-fixed top-0 end-0 p-3" :hidden="!showToastFlag">
-        <div id="liveToast" class="toast d-flex bg-danger " role="alert" ref="toastRef" aria-live="assertive"
+        <div id="liveToast" class="toast d-flex bg-danger" role="alert" ref="toastRef" aria-live="assertive"
             aria-atomic="true">
             <div class="toast-body text-white fw-bolder">
                 {{ toastMessage }}
@@ -74,38 +71,30 @@ const goToDetail = (id) => {
         </div>
     </div>
 
-    <div class="modal fade" id="createVMModal" tabindex="-1" aria-labelledby="createVMModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createVMModal" tabindex="-1" aria-labelledby="createVMModalLabel" aria-hidden="true"
+        ref="modalRef">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form @submit.prevent="handleVMCreate" class="p-3">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
-                        <input v-model="formData.name" type="text" class="form-control" id="name"
-                            aria-describedby="nameHelp" required>
+                        <input v-model="formData.name" type="text" class="form-control" id="name" required>
                     </div>
                     <div class="mb-3">
                         <label for="cores" class="form-label">Cores</label>
-                        <input v-model="formData.cores" type="number" class="form-control" id="cores"
-                            aria-describedby="coresHelp" required>
+                        <input v-model="formData.cores" type="number" class="form-control" id="cores" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="ram" class="form-label">Ram</label>
-                        <input v-model="formData.ram" type="number" class="form-control" id="ram"
-                            aria-describedby="ramHelp" required>
+                        <input v-model="formData.ram" type="number" class="form-control" id="ram" required>
                     </div>
-
-
                     <div class="mb-3">
                         <label for="os" class="form-label">OS</label>
-                        <input v-model="formData.os" type="text" class="form-control" id="os" aria-describedby="osHelp"
-                            required>
+                        <input v-model="formData.os" type="text" class="form-control" id="os" required>
                     </div>
-
                     <div class="mb-3">
                         <label for="status" class="form-label">Status</label>
-                        <input v-model="formData.status" type="text" class="form-control" id="status"
-                            aria-describedby="statusHelp" required>
+                        <input v-model="formData.status" type="text" class="form-control" id="status" required>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -115,6 +104,7 @@ const goToDetail = (id) => {
     </div>
 
     <Navbar />
+
     <p class="p-2">User type: {{ authStore.user.user_type }}</p>
     <h1 class="mt-4">Virtual Machines:</h1>
     <div class="list-group mt-1">
