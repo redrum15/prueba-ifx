@@ -51,7 +51,7 @@ onBeforeRouteLeave((to, from, next) => {
     <Navbar />
 
     <button @click="goBack()" class="btn btn-link">&lt; back</button>
-    <div class="container d-flex justify-content-between">
+    <div class="container d-flex justify-content-between mt-4">
         <div>
             <p>Name: {{ data.name }}</p>
             <p>Cores: {{ data.cores }}</p>
@@ -60,8 +60,8 @@ onBeforeRouteLeave((to, from, next) => {
             <p>Status: {{ data.status }}</p>
         </div>
         <div v-if="authStore.user.user_type === 'admin'">
-            <button @click="goBack()" class="btn btn-link">EDIT</button>
-            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#deleteVMModal">DELETE</button>
+            <button @click="goBack()" class="btn btn-warning me-2">EDIT</button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteVMModal">DELETE</button>
         </div>
     </div>
 
