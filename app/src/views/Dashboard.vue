@@ -10,7 +10,7 @@ import Navbar from '@/components/Navbar.vue';
 
 const router = useRouter();
 const toastRef = ref(null);
-const toastMessage = ref("test");
+const toastMessage = ref("");
 const showToastFlag = ref(false);
 const authStore = useAuthStore();
 const modalRef = ref(null);
@@ -31,9 +31,15 @@ const formattedItems = computed(() =>
     }))
 );
 
+const addNewVMToList = (newVM) => {
+    items.value.unshift(newVM);
+};
+
 const handleVMCreate = async () => {
     try {
-        await handlerRequest("POST", API_URLS.VMS.DEFAULT, formData.value);
+        const newVM = await handlerRequest("POST", API_URLS.VMS.DEFAULT, formData.value);
+        addNewVMToList(newVM);
+
         const modalInstance = Modal.getInstance(modalRef.value) || new Modal(modalRef.value);
         modalInstance.hide();
 
@@ -118,7 +124,7 @@ const goToDetail = (id) => {
                 <small>{{ item.created_at }}</small>
             </div>
             <p class="mb-1">Cores: {{ item.cores }} - Ram: {{ item.ram }}</p>
-            <p>Os: {{ item.os }} - Status: {{ item.status }}</p>
+            <p>OS: {{ item.os }} - Status: {{ item.status }}</p>
         </a>
     </div>
 </template>
