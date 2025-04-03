@@ -27,16 +27,18 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-    <form @submit.prevent="handleSubmit">
-        <div data-mdb-input-init class="form-outline mb-4">
-            <input v-model="formData.email" type="email" id="email" class="form-control" required />
-            <label class="form-label" for="email">Email address</label>
-        </div>
-        <div data-mdb-input-init class="form-outline mb-4">
-            <input v-model="formData.password" type="password" id="password" class="form-control" required />
-            <label class="form-label" for="password">Password</label>
-        </div>
-        <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign
-            in</button>
-    </form>
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <form @submit.prevent="handleSubmit" class="p-4 border rounded shadow bg-white" style="width: 350px;">
+            <h3 class="text-center mb-4">Sign In</h3>
+            <div class="form-outline mb-4">
+                <label class="form-label" for="email">Email</label>
+                <input v-model="formData.email" type="email" id="email" class="form-control" required />
+            </div>
+            <div class="form-outline mb-4">
+                <label class="form-label" for="password">Password</label>
+                <input v-model="formData.password" type="password" id="password" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block w-100">Sign in</button>
+        </form>
+    </div>
 </template>
