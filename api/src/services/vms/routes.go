@@ -53,6 +53,7 @@ func CreateVM(w http.ResponseWriter, r *http.Request) {
 
 func ListVMS(w http.ResponseWriter, r *http.Request) {
 	var vms []models.VirtualMachine
+	var vmResponses []utils.VirtualMachineResponse
 
 	_, err := querys.ListVMS(&vms)
 	if err != nil {
@@ -60,9 +61,22 @@ func ListVMS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	for _, vm := range vms {
+		vmResponses = append(vmResponses, utils.VirtualMachineResponse{
+			ID:        vm.ID.String(),
+			Name:      vm.Name,
+			Cores:     vm.Cores,
+			RAM:       vm.Ram,
+			OS:        vm.OS,
+			Status:    vm.Status,
+			CreatedAt: vm.CreatedAt,
+			UpdatedAt: vm.UpdatedAt,
+		})
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(vms); err != nil {
+	if err := json.NewEncoder(w).Encode(vmResponses); err != nil {
 		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
 		return
 	}
@@ -94,7 +108,6 @@ func DetailVM(w http.ResponseWriter, r *http.Request) {
 		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
 		return
 	}
-
 }
 
 func DeleteVM(w http.ResponseWriter, r *http.Request) {
