@@ -27,7 +27,7 @@ const formData = ref({
 const formattedItems = computed(() =>
     items.value.map(item => ({
         ...item,
-        create_at: formatDistanceToNow(parseISO(item.CreatedAt), { addSuffix: true })
+        created_at: formatDistanceToNow(parseISO(item.created_at), { addSuffix: true })
     }))
 );
 
@@ -117,14 +117,14 @@ const goToDetail = (id) => {
         </div>
     </div>
     <div class="list-group mt-1">
-        <a v-for="item in formattedItems" :key="item.ID" href="#" class="list-group-item list-group-item-action"
-            aria-current="true" @click="goToDetail(item.ID)">
+        <a v-for="item in formattedItems" :key="item.id" href="#" class="list-group-item list-group-item-action"
+            aria-current="true" @click="goToDetail(item.id)">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ item.Name }}</h5>
-                <small>{{ item.create_at }}</small>
+                <h5 class="mb-1">{{ item.name }}</h5>
+                <small>{{ item.created_at }}</small>
             </div>
-            <p class="mb-1">{{ item.Cores }}</p>
-            <small>{{ item.Status }}</small>
+            <p class="mb-1">Cores: {{ item.cores }} - Ram: {{ item.ram }}</p>
+            <p>Os: {{ item.os }} - Status: {{ item.status }}</p>
         </a>
     </div>
 </template>
