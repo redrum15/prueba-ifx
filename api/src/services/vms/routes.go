@@ -43,12 +43,7 @@ func CreateVM(w http.ResponseWriter, r *http.Request) {
 
 	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "created"}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(vmReq.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt)); err != nil {
-		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
-		return
-	}
+	handlers.SendJSONSuccess(w, vmReq.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt), http.StatusOK)
 }
 
 func ListVMS(w http.ResponseWriter, r *http.Request) {
@@ -74,12 +69,7 @@ func ListVMS(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(vmResponses); err != nil {
-		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
-		return
-	}
+	handlers.SendJSONSuccess(w, vmResponses, http.StatusOK)
 }
 
 func DetailVM(w http.ResponseWriter, r *http.Request) {
@@ -102,12 +92,7 @@ func DetailVM(w http.ResponseWriter, r *http.Request) {
 		UpdatedAt: vm.UpdatedAt,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(vmResponse); err != nil {
-		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
-		return
-	}
+	handlers.SendJSONSuccess(w, vmResponse, http.StatusOK)
 }
 
 func DeleteVM(w http.ResponseWriter, r *http.Request) {
@@ -121,8 +106,7 @@ func DeleteVM(w http.ResponseWriter, r *http.Request) {
 
 	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "deleted"}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNoContent)
+	handlers.SendJSONSuccess(w, nil, http.StatusNoContent)
 }
 
 func UpdateVM(w http.ResponseWriter, r *http.Request) {
@@ -149,10 +133,5 @@ func UpdateVM(w http.ResponseWriter, r *http.Request) {
 
 	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "updated"}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(vmRequest.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt)); err != nil {
-		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
-		return
-	}
+	handlers.SendJSONSuccess(w, vmRequest.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt), http.StatusOK)
 }

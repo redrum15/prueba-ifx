@@ -8,7 +8,6 @@ import (
 	"github.com/redrum15/prueba/src/handlers"
 	"github.com/redrum15/prueba/src/middlewares"
 	"github.com/redrum15/prueba/src/utils"
-	"github.com/rs/zerolog/log"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -44,11 +43,5 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		UserType: result.Type,
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(response); err != nil {
-		log.Error().Err(err).Msg("Error encoding response")
-		http.Error(w, "Error generating response", http.StatusInternalServerError)
-		return
-	}
+	handlers.SendJSONSuccess(w, response, http.StatusOK)
 }
