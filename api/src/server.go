@@ -39,22 +39,25 @@ func main() {
 		}
 	}()
 
-	router.Post("/login", auth.Login)
+	router.Route("/api", func(router chi.Router) {
 
-	router.Group(func(router chi.Router) {
-		router.Use(middlewares.JWTVerifier())
-		router.Use(middlewares.RequireRole(ADMIN_ROLE))
+		router.Post("/login", auth.Login)
 
-		router.Post("/vms", vms.CreateVM)
-		router.Delete("/vms/{id}", vms.DeleteVM)
-		router.Put("/vms/{id}", vms.UpdateVM)
-	})
+		router.Group(func(router chi.Router) {
+			router.Use(middlewares.JWTVerifier())
+			router.Use(middlewares.RequireRole(ADMIN_ROLE))
 
-	router.Group(func(router chi.Router) {
-		router.Use(middlewares.JWTVerifier())
+			router.Post("/vms", vms.CreateVM)
+			router.Delete("/vms/{id}", vms.DeleteVM)
+			router.Put("/vms/{id}", vms.UpdateVM)
+		})
 
-		router.Get("/vms", vms.ListVMS)
-		router.Get("/vms/{id}", vms.DetailVM)
+		router.Group(func(router chi.Router) {
+			router.Use(middlewares.JWTVerifier())
+
+			router.Get("/vms", vms.ListVMS)
+			router.Get("/vms/{id}", vms.DetailVM)
+		})
 	})
 
 	http.ListenAndServe(":3000", router)
