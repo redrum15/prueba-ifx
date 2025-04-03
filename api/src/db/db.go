@@ -30,7 +30,7 @@ func createTables() {
 }
 
 func createUsers() {
-	pass, err := utils.HashPassword(configs.Envs.AdminPasword)
+	pass, err := utils.HashPassword(configs.Envs.UserPassw)
 	if err != nil {
 		panic("unable to hast password")
 	}

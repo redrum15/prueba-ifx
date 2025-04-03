@@ -9,7 +9,7 @@ import (
 type Config struct {
 	DBUrl                  string
 	JWTSecret              string
-	AdminPasword           string
+	UserPassw              string
 	JWTExpirationInSeconds int64
 }
 
@@ -19,9 +19,9 @@ func initConfig() Config {
 	godotenv.Load()
 
 	return Config{
-		DBUrl:        getEnv("DB_URL", ""),
-		JWTSecret:    getEnv("JWT_SECRET", ""),
-		AdminPasword: getEnv("ADMIN_PASSW", ""),
+		DBUrl:     getEnv("DB_URL", ""),
+		JWTSecret: getEnv("JWT_SECRET", ""),
+		UserPassw: getEnv("USER_PASSW", ""),
 	}
 }
 
