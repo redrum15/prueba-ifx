@@ -63,9 +63,6 @@ const goToDetail = (id) => {
 </script>
 
 <template>
-    <Navbar />
-    <p class="p-2">User type: {{ authStore.user.user_type }}</p>
-    <h1 class="mt-4">Virtual Machines:</h1>
     <div class="toast-container position-fixed top-0 end-0 p-3" :hidden="!showToastFlag">
         <div id="liveToast" class="toast d-flex bg-danger " role="alert" ref="toastRef" aria-live="assertive"
             aria-atomic="true">
@@ -116,11 +113,18 @@ const goToDetail = (id) => {
             </div>
         </div>
     </div>
+
+    <Navbar />
+    <p class="p-2">User type: {{ authStore.user.user_type }}</p>
+    <h1 class="mt-4">Virtual Machines:</h1>
     <div class="list-group mt-1">
         <a v-for="item in formattedItems" :key="item.id" href="#" class="list-group-item list-group-item-action"
             aria-current="true" @click="goToDetail(item.id)">
             <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ item.name }}</h5>
+                <div>
+                    <small>{{ item.id }}</small>
+                    <h5 class="mb-1">{{ item.name }}</h5>
+                </div>
                 <small>{{ item.created_at }}</small>
             </div>
             <p class="mb-1">Cores: {{ item.cores }} - Ram: {{ item.ram }}</p>
