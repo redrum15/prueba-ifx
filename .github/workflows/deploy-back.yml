@@ -28,11 +28,10 @@ jobs:
           cd api/
           go build -o main ./src
 
-      - name: 📥 Install Fly CLI
-        run: curl -L https://fly.io/install.sh | sh
+      - name: 🏗️ Set up Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
 
-      - name: 🚀 Deploy to Fly.io
-        run: |
-          cd api/
-          /home/runner/.fly/bin/flyctl auth token "${{ secrets.FLY_API_TOKEN }}"
-          /home/runner/.fly/bin/flyctl deploy --remote-only
+      - name: 🏗️ Deploy app
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
