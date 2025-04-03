@@ -58,11 +58,11 @@ onBeforeRouteLeave((to, from, next) => {
     <div class="container d-flex justify-content-between mt-4">
         <div>
             <template v-if="!isEditing">
-                <p>Name: {{ data.name }}</p>
-                <p>Cores: {{ data.cores }}</p>
-                <p>Ram: {{ data.ram }}</p>
-                <p>OS: {{ data.os }}</p>
-                <p>Status: {{ data.status }}</p>
+                <p>Name: {{ data?.name }}</p>
+                <p>Cores: {{ data?.cores }}</p>
+                <p>Ram: {{ data?.ram }}</p>
+                <p>OS: {{ data?.os }}</p>
+                <p>Status: {{ data?.status }}</p>
             </template>
             <template v-else>
                 <div class="mb-2">
