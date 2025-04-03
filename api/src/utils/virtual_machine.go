@@ -101,3 +101,7 @@ func (vm *VirtualMachineRequest) UpdateStatus(newStatus string) error {
 	vm.Status = newStatus
 	return nil
 }
+
+func GenerateEventMessage(eventType, vmId string) string {
+	return fmt.Sprintf("The vm with id %s has been %s", vmId, eventType)
+}
