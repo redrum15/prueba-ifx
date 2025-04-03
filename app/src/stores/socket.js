@@ -12,9 +12,6 @@ export const useWebSocketStore = defineStore("websocket", () => {
         socket.value = new WebSocket("ws://localhost:3000/ws");
 
         socket.value.onmessage = (event) => {
-
-            console.log(event);
-
             const data = JSON.parse(event.data);
             messages.value.push(data);
         };
