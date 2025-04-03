@@ -2,6 +2,9 @@
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { API_URLS } from "@/rest/urls";
+import { handlerRequest } from "@/rest/index";
+
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -13,24 +16,12 @@ const formData = ref({
 
 const handleSubmit = async () => {
     try {
-        const response = await fetch("http://localhost:3000/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData.value),
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            authStore.login(data);
-            router.push('/');
-        } else {
-            alert("Error al enviar el formulario");
-        }
+        const response = await handlerRequest("POST", API_URLS.AUTH.LOGIN, formData.value, false);
+        authStore.login(response);
+        router.push('/');
     } catch (error) {
-        console.error("Error en la solicitud:", error);
-        alert("No se pudo conectar con el servidor");
+        console.log(error);
+        alert("Invalid credentials");
     }
 };
 </script>
