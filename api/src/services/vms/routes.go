@@ -41,7 +41,7 @@ func CreateVM(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "created"}
+	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "created", Message: utils.GenerateEventMessage("created", vm.ID.String())}
 
 	handlers.SendJSONSuccess(w, vmReq.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt), http.StatusOK)
 }
@@ -104,7 +104,7 @@ func DeleteVM(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "deleted"}
+	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "deleted", Message: utils.GenerateEventMessage("deleted", vmId)}
 
 	handlers.SendJSONSuccess(w, nil, http.StatusNoContent)
 }
@@ -131,7 +131,7 @@ func UpdateVM(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "updated"}
+	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "updated", Message: utils.GenerateEventMessage("updated", vmId)}
 
 	handlers.SendJSONSuccess(w, vmRequest.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt), http.StatusOK)
 }

@@ -10,6 +10,7 @@ import (
 
 type VMEvent struct {
 	EventType string `json:"event_type"`
+	Message   string `json:"message"`
 }
 
 var upgrader = websocket.Upgrader{
