@@ -23,11 +23,8 @@ const handleSubmit = async () => {
 
         if (response.ok) {
             const data = await response.json();
-            console.log(data);
-
             authStore.login(data);
-            console.log("esta casi")
-            router.push('/dashboard');
+            router.push('/');
         } else {
             alert("Error al enviar el formulario");
         }

@@ -7,7 +7,7 @@ import DetailVm from '@/views/DetailVm.vue';
 const routes = [
     { path: '/login', component: Login },
     {
-        path: '/dashboard',
+        path: '/',
         component: Dashboard,
         meta: { requiresAuth: true }
     },

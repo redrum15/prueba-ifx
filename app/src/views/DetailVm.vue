@@ -35,7 +35,7 @@ onMounted(async () => {
 });
 
 const goBack = () => {
-    router.push("/dashboard");
+    router.push("/");
 };
 
 onBeforeRouteLeave((to, from, next) => {
