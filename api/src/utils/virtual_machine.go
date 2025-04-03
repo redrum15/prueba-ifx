@@ -33,15 +33,15 @@ var ValidStatuses = []string{
 
 func (vm *VirtualMachineRequest) Validate() error {
 	if strings.TrimSpace(vm.Name) == "" {
-		return errors.New("name is required")
+		return errors.New("Name is required")
 	}
 
 	if vm.Cores <= 0 {
-		return fmt.Errorf("cores must be a positive number")
+		return errors.New("Cores must be a positive number")
 	}
 
 	if vm.Ram <= 0 {
-		return fmt.Errorf("ram must be a positive number")
+		return errors.New("Ram must be a positive number")
 	}
 
 	if strings.TrimSpace(vm.OS) == "" {
@@ -49,7 +49,7 @@ func (vm *VirtualMachineRequest) Validate() error {
 	}
 
 	if strings.TrimSpace(vm.Status) == "" {
-		return errors.New("status is required")
+		return errors.New("Status is required")
 	}
 
 	if !isValidStatus(vm.Status) {
@@ -95,7 +95,7 @@ func (vm *VirtualMachineRequest) ToResponse(id string, createAt, updateAt time.T
 
 func (vm *VirtualMachineRequest) UpdateStatus(newStatus string) error {
 	if !isValidStatus(newStatus) {
-		return fmt.Errorf("invalid status: %s. Valid statuses are: %s",
+		return fmt.Errorf("Invalid status: %s. Valid statuses are: %s",
 			newStatus, strings.Join(ValidStatuses, ", "))
 	}
 	vm.Status = newStatus

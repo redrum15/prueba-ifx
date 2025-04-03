@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/redrum15/prueba/src/db/models"
 	"github.com/redrum15/prueba/src/db/querys"
+	"github.com/redrum15/prueba/src/handlers"
 	"github.com/redrum15/prueba/src/utils"
 )
 
@@ -16,12 +17,12 @@ func CreateVM(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&vmReq)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		handlers.SendJSONError(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
 	if err := vmReq.Validate(); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -36,14 +37,16 @@ func CreateVM(w http.ResponseWriter, r *http.Request) {
 
 	_, err = querys.CreateVM(&vm)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "created"}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(vmReq.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt)); err != nil {
-		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
 		return
 	}
 }
@@ -53,14 +56,14 @@ func ListVMS(w http.ResponseWriter, r *http.Request) {
 
 	_, err := querys.ListVMS(&vms)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(vms); err != nil {
-		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
 		return
 	}
 }
@@ -70,7 +73,7 @@ func DetailVM(w http.ResponseWriter, r *http.Request) {
 
 	vm, err := querys.GetVM(vmId)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -88,7 +91,7 @@ func DetailVM(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(vmResponse); err != nil {
-		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
 		return
 	}
 
@@ -99,9 +102,11 @@ func DeleteVM(w http.ResponseWriter, r *http.Request) {
 
 	err := querys.DeleteVM(vmId)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "deleted"}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNoContent)
@@ -114,25 +119,27 @@ func UpdateVM(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&vmRequest)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		handlers.SendJSONError(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
 	if err := vmRequest.Validate(); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	vm, err := querys.UpdateVMByID(vmId, vmRequest)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	handlers.GetBroadcast() <- handlers.VMEvent{EventType: "updated"}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(vmRequest.ToResponse(vm.ID.String(), vm.CreatedAt, vm.UpdatedAt)); err != nil {
-		http.Error(w, "Error generating response", http.StatusInternalServerError)
+		handlers.SendJSONError(w, "Error generating response", http.StatusInternalServerError)
 		return
 	}
 }

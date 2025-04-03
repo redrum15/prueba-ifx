@@ -9,6 +9,7 @@ import (
 
 	"github.com/go-chi/jwtauth/v5"
 	configs "github.com/redrum15/prueba/src/config"
+	"github.com/redrum15/prueba/src/handlers"
 	"github.com/rs/zerolog/log"
 )
 
@@ -31,28 +32,28 @@ func JWTVerifier() func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			token := extractTokenFromHeader(r)
 			if token == "" {
-				http.Error(w, "Authorization token required", http.StatusUnauthorized)
+				handlers.SendJSONError(w, "Authorization token required", http.StatusUnauthorized)
 				return
 			}
 
 			jwtToken, err := ja.Decode(token)
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to extract claims from JWT token")
-				http.Error(w, "Invalid or expired token", http.StatusUnauthorized)
+				handlers.SendJSONError(w, "Invalid or expired token", http.StatusUnauthorized)
 				return
 			}
 
 			fmt.Println(token)
 			if _, err := jwtauth.VerifyToken(ja, token); err != nil {
 				log.Error().Err(err).Msg("Failed to extract claims from JWT token")
-				http.Error(w, "Invalid or expired token", http.StatusUnauthorized)
+				handlers.SendJSONError(w, "Invalid or expired token", http.StatusUnauthorized)
 				return
 			}
 
 			claims, err := jwtToken.AsMap(r.Context())
 			if err != nil {
 				log.Error().Err(err).Msg("Failed to extract claims from JWT token")
-				http.Error(w, "Invalid token claims", http.StatusUnauthorized)
+				handlers.SendJSONError(w, "Invalid token claims", http.StatusUnauthorized)
 				return
 			}
 
@@ -74,7 +75,7 @@ func RequireRole(roles ...string) func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			role, ok := r.Context().Value(UserRoleKey).(string)
 			if !ok {
-				http.Error(w, "Role information not available", http.StatusUnauthorized)
+				handlers.SendJSONError(w, "Role information not available", http.StatusUnauthorized)
 				return
 			}
 
@@ -87,7 +88,7 @@ func RequireRole(roles ...string) func(http.Handler) http.Handler {
 			}
 
 			if !hasRole {
-				http.Error(w, "Insufficient permissions", http.StatusForbidden)
+				handlers.SendJSONError(w, "You don't have permissions to perform this action", http.StatusForbidden)
 				return
 			}
 

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/redrum15/prueba/src/db/querys"
+	"github.com/redrum15/prueba/src/handlers"
 	"github.com/redrum15/prueba/src/middlewares"
 	"github.com/redrum15/prueba/src/utils"
 	"github.com/rs/zerolog/log"
@@ -15,31 +16,32 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&login)
 	if err != nil {
-		http.Error(w, "Invalid request payload", http.StatusBadRequest)
+		handlers.SendJSONError(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
 
 	if err := login.Validate(); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		handlers.SendJSONError(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	result, err := querys.GetUserFromEmailNPassword(login.Email, login.Password)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		handlers.SendJSONError(w, err.Error(), http.StatusNotFound)
 		return
 	}
 
 	token, err := middlewares.GenerateJWT(result.ID.String(), result.Type)
 	if err != nil {
-		http.Error(w, "Error generating authentication token", http.StatusInternalServerError)
+		handlers.SendJSONError(w, "Error generating authentication token", http.StatusInternalServerError)
 		return
 	}
 
 	response := utils.LoginResponse{
-		Token:  token,
-		UserID: result.ID.String(),
+		Token:    token,
+		UserID:   result.ID.String(),
+		UserType: result.Type,
 	}
 
 	w.Header().Set("Content-Type", "application/json")
