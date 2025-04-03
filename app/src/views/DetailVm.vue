@@ -30,6 +30,12 @@ const startEditing = () => {
 };
 
 const saveChanges = async () => {
+    try {
+        await handlerRequest("PUT", API_URLS.VMS.EDIT(route.params.id), data.value);
+        isEditing.value = false;
+    } catch (error) {
+        alert(error.message);
+    }
     await handlerRequest("PUT", API_URLS.VMS.EDIT(route.params.id), data.value);
     isEditing.value = false;
 };
@@ -65,27 +71,31 @@ onBeforeRouteLeave((to, from, next) => {
                 <p>Status: {{ data?.status }}</p>
             </template>
             <template v-else>
-                <div class="mb-2">
-                    <label class="form-label">Name</label>
-                    <input v-model="data.name" type="text" class="form-control">
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Cores</label>
-                    <input v-model="data.cores" type="number" class="form-control">
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Ram</label>
-                    <input v-model="data.ram" type="number" class="form-control">
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">OS</label>
-                    <input v-model="data.os" type="text" class="form-control">
-                </div>
-                <div class="mb-2">
-                    <label class="form-label">Status</label>
-                    <input v-model="data.status" type="text" class="form-control">
-                </div>
+                <form @submit.prevent="handleSubmit">
+                    <div class="mb-2">
+                        <label class="form-label">Name</label>
+                        <input v-model="data.name" type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Cores</label>
+                        <input v-model="data.cores" type="number" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Ram</label>
+                        <input v-model="data.ram" type="number" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">OS</label>
+                        <input v-model="data.os" type="text" class="form-control" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label">Status</label>
+                        <input v-model="data.status" type="text" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
             </template>
+
         </div>
 
         <div v-if="authStore.user.user_type === 'admin'">
