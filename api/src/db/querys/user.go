@@ -2,7 +2,6 @@ package querys
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/redrum15/prueba/src/db"
 	"github.com/redrum15/prueba/src/db/models"
@@ -18,8 +17,6 @@ func GetUserFromEmailNPassword(email, password string) (*models.User, error) {
 		return nil, errors.New("user not found")
 	}
 
-	fmt.Println("passwrod de la db", user.Password)
-	fmt.Println("passord de la req", password)
 	var samePassword bool = utils.ComparePasswords(user.Password, []byte(password))
 	if !samePassword {
 		return nil, errors.New("invalid email or password")

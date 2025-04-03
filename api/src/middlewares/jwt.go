@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -43,7 +42,6 @@ func JWTVerifier() func(http.Handler) http.Handler {
 				return
 			}
 
-			fmt.Println(token)
 			if _, err := jwtauth.VerifyToken(ja, token); err != nil {
 				log.Error().Err(err).Msg("Failed to extract claims from JWT token")
 				handlers.SendJSONError(w, "Invalid or expired token", http.StatusUnauthorized)

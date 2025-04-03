@@ -20,7 +20,6 @@ const handleSubmit = async () => {
         authStore.login(response);
         router.push('/');
     } catch (error) {
-        console.log(error);
         alert("Invalid credentials");
     }
 };
