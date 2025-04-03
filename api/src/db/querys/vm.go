@@ -36,7 +36,7 @@ func GetVM(id string) (*models.VirtualMachine, error) {
 }
 
 func ListVMS(vms *[]models.VirtualMachine) (*[]models.VirtualMachine, error) {
-	if err := db.GetDBInstance().Find(&vms).Error; err != nil {
+	if err := db.GetDBInstance().Order("created_at DESC").Find(&vms).Error; err != nil {
 		return nil, err
 	}
 	return vms, nil
