@@ -15,7 +15,7 @@ if (environment === 'local') {
 } else {
   config = {
     httpProtocol: 'https',
-    wsProtocol: 'ws',
+    wsProtocol: 'wss',
     domain: 'api-broken-thunder-9310.fly.dev'
   };
 }
