@@ -23,6 +23,10 @@ services:
       - "80:80"
     depends_on:
       - backend
+    env_file:
+      - .env
+    environment:
+      - VITE_ENVIRONMENT=${VITE_ENVIRONMENT}
 
   db:
     image: postgres:15
